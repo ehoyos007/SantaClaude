@@ -1,10 +1,19 @@
 import { app, BrowserWindow, ipcMain, Menu } from 'electron'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import Store from 'electron-store'
 import { createTerminal, writeToTerminal, resizeTerminal, killTerminal, killAllTerminals } from './terminal.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+
+// Initialize electron-store for persistent storage
+const store = new Store({
+  name: 'claude-code-projects',
+  defaults: {
+    projects: []
+  }
+})
 
 const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged
 
@@ -104,7 +113,7 @@ function createWindow() {
     titleBarStyle: 'hiddenInset',
     trafficLightPosition: { x: 16, y: 16 },
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: false // Required for node-pty
@@ -113,8 +122,6 @@ function createWindow() {
 
   if (isDev) {
     mainWindow.loadURL('http://localhost:5173')
-    // Only open devtools in dev if explicitly needed
-    // mainWindow.webContents.openDevTools()
   } else {
     mainWindow.loadFile(path.join(__dirname, '../dist/index.html'))
   }
@@ -170,4 +177,19 @@ ipcMain.handle('terminal:resize', async (event, { terminalId, cols, rows }) => {
 
 ipcMain.handle('terminal:kill', async (event, { terminalId }) => {
   killTerminal(terminalId)
+})
+
+// IPC Handlers for electron-store
+ipcMain.handle('store:get', async (event, key) => {
+  return store.get(key)
+})
+
+ipcMain.handle('store:set', async (event, { key, value }) => {
+  store.set(key, value)
+  return true
+})
+
+ipcMain.handle('store:delete', async (event, key) => {
+  store.delete(key)
+  return true
 })

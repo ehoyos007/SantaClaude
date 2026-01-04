@@ -13,7 +13,6 @@ export default function Terminal({ project, autoStart = false, command = null })
   const [isElectron, setIsElectron] = useState(false)
 
   useEffect(() => {
-    // Check if running in Electron
     setIsElectron(window.electronAPI?.isElectron === true)
   }, [])
 

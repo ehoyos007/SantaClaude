@@ -1,20 +1,22 @@
-import { createContext, useContext, useReducer, useEffect } from 'react'
-import { useLocalStorage } from '../hooks/useLocalStorage'
-import { STORAGE_KEY, createProject, createSession, createTodo } from '../utils/storage'
+import { createContext, useContext, useReducer, useEffect, useState } from 'react'
+import { createProject, createSession, createTodo } from '../utils/storage'
 
 const ProjectContext = createContext(null)
+
+const STORAGE_KEY = 'projects'
 
 const initialState = {
   projects: [],
   selectedProjectId: null,
   searchQuery: '',
-  view: 'list' // 'list' | 'detail'
+  view: 'list', // 'list' | 'detail'
+  isLoading: true
 }
 
 function projectReducer(state, action) {
   switch (action.type) {
     case 'LOAD_PROJECTS':
-      return { ...state, projects: action.payload }
+      return { ...state, projects: action.payload, isLoading: false }
 
     case 'ADD_PROJECT': {
       const newProject = createProject(action.payload.name, action.payload.path, action.payload.description)
@@ -130,14 +132,53 @@ function projectReducer(state, action) {
   }
 }
 
-export function ProjectProvider({ children }) {
-  const [savedProjects, setSavedProjects] = useLocalStorage(STORAGE_KEY, [])
-  const [state, dispatch] = useReducer(projectReducer, { ...initialState, projects: savedProjects })
+// Helper to check if running in Electron
+const isElectron = () => typeof window !== 'undefined' && window.electronAPI?.isElectron
 
-  // Sync to localStorage when projects change
+// Storage abstraction for Electron and browser
+const storage = {
+  async get(key) {
+    if (isElectron()) {
+      return await window.electronAPI.storeGet(key)
+    }
+    try {
+      const item = window.localStorage.getItem(key)
+      return item ? JSON.parse(item) : null
+    } catch {
+      return null
+    }
+  },
+  async set(key, value) {
+    if (isElectron()) {
+      await window.electronAPI.storeSet(key, value)
+    } else {
+      try {
+        window.localStorage.setItem(key, JSON.stringify(value))
+      } catch (error) {
+        console.error('localStorage set error:', error)
+      }
+    }
+  }
+}
+
+export function ProjectProvider({ children }) {
+  const [state, dispatch] = useReducer(projectReducer, initialState)
+
+  // Load projects from storage on mount
   useEffect(() => {
-    setSavedProjects(state.projects)
-  }, [state.projects, setSavedProjects])
+    async function loadProjects() {
+      const projects = await storage.get(STORAGE_KEY)
+      dispatch({ type: 'LOAD_PROJECTS', payload: projects || [] })
+    }
+    loadProjects()
+  }, [])
+
+  // Sync to storage when projects change (skip initial load)
+  useEffect(() => {
+    if (!state.isLoading) {
+      storage.set(STORAGE_KEY, state.projects)
+    }
+  }, [state.projects, state.isLoading])
 
   const selectedProject = state.projects.find(p => p.id === state.selectedProjectId)
 

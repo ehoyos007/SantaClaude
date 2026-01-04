@@ -19,6 +19,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return () => ipcRenderer.removeListener('terminal:exit', handler)
   },
 
+  // Storage operations (electron-store)
+  storeGet: (key) => ipcRenderer.invoke('store:get', key),
+  storeSet: (key, value) => ipcRenderer.invoke('store:set', { key, value }),
+  storeDelete: (key) => ipcRenderer.invoke('store:delete', key),
+
   // Check if running in Electron
   isElectron: true
 })
