@@ -165,10 +165,10 @@ export default function Terminal({ project, autoStart = false, command = null })
 
   if (!isElectron) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+      <div className="flex flex-col items-center justify-center h-64 text-claude-text-tertiary">
         <TerminalIcon className="w-12 h-12 mb-4 opacity-50" />
-        <p className="text-lg mb-2">Terminal requires Electron</p>
-        <p className="text-sm">Run the app with <code className="text-orange-400">npm run electron:dev</code></p>
+        <p className="text-lg mb-2 text-claude-text-secondary">Terminal requires Electron</p>
+        <p className="text-sm">Run the app with <code className="text-claude-accent">npm run electron:dev</code></p>
       </div>
     )
   }
@@ -180,7 +180,7 @@ export default function Terminal({ project, autoStart = false, command = null })
         {!isRunning ? (
           <button
             onClick={() => startTerminal()}
-            className="flex items-center gap-2 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 bg-claude-success hover:opacity-90 text-white text-sm font-medium rounded-claude-sm transition-colors"
           >
             <Play className="w-4 h-4" />
             Start Terminal
@@ -189,14 +189,14 @@ export default function Terminal({ project, autoStart = false, command = null })
           <>
             <button
               onClick={stopTerminal}
-              className="flex items-center gap-2 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg transition-colors"
+              className="flex items-center gap-2 px-3 py-1.5 bg-claude-error hover:opacity-90 text-white text-sm font-medium rounded-claude-sm transition-colors"
             >
               <Square className="w-4 h-4" />
               Stop
             </button>
             <button
               onClick={restartTerminal}
-              className="flex items-center gap-2 px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors"
+              className="flex items-center gap-2 px-3 py-1.5 bg-claude-bg-tertiary hover:bg-claude-border text-claude-text-primary text-sm rounded-claude-sm transition-colors"
             >
               <RotateCcw className="w-4 h-4" />
               Restart
@@ -205,23 +205,23 @@ export default function Terminal({ project, autoStart = false, command = null })
         )}
         <button
           onClick={launchClaude}
-          className="flex items-center gap-2 px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white text-sm rounded-lg transition-colors ml-auto"
+          className="flex items-center gap-2 px-3 py-1.5 bg-claude-accent hover:bg-claude-accent-hover text-white text-sm font-medium rounded-claude-sm transition-colors ml-auto"
         >
           <TerminalIcon className="w-4 h-4" />
           Run Claude
         </button>
       </div>
 
-      {/* Terminal Container */}
+      {/* Terminal Container - stays dark */}
       <div
         ref={terminalRef}
-        className="flex-1 bg-gray-800 rounded-lg overflow-hidden p-2"
+        className="flex-1 bg-gray-800 rounded-claude-md overflow-hidden p-2"
         style={{ minHeight: '300px' }}
       />
 
       {/* Status */}
-      <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
-        <div className={`w-2 h-2 rounded-full ${isRunning ? 'bg-green-500' : 'bg-gray-600'}`} />
+      <div className="flex items-center gap-2 mt-2 text-xs text-claude-text-tertiary">
+        <div className={`w-2 h-2 rounded-full ${isRunning ? 'bg-claude-success' : 'bg-claude-border'}`} />
         <span>{isRunning ? 'Running' : 'Stopped'}</span>
         {project?.path && (
           <span className="ml-auto font-mono truncate max-w-xs">{project.path}</span>

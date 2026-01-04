@@ -44,12 +44,12 @@ export default function TodoList({ project }) {
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
           placeholder="Add a new task..."
-          className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          className="flex-1 px-4 py-2.5 bg-claude-bg-surface border border-claude-border rounded-claude-sm text-claude-text-primary placeholder-claude-text-tertiary focus:outline-none focus:ring-2 focus:ring-claude-accent focus:border-transparent"
         />
         <button
           type="submit"
           disabled={!newTodo.trim()}
-          className="flex items-center gap-2 px-4 py-2 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white rounded-lg transition-colors"
+          className="flex items-center gap-2 px-4 py-2.5 bg-claude-accent hover:bg-claude-accent-hover disabled:opacity-50 text-white font-medium rounded-claude-sm transition-colors"
         >
           <Plus className="w-4 h-4" />
           Add
@@ -59,13 +59,13 @@ export default function TodoList({ project }) {
       {/* Progress */}
       {project.todos.length > 0 && (
         <div className="mb-6">
-          <div className="flex items-center justify-between text-sm text-gray-400 mb-2">
+          <div className="flex items-center justify-between text-sm text-claude-text-secondary mb-2">
             <span>Progress</span>
             <span>{completedCount} of {project.todos.length} completed</span>
           </div>
-          <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+          <div className="h-2 bg-claude-bg-tertiary rounded-full overflow-hidden">
             <div
-              className="h-full bg-orange-500 transition-all duration-300"
+              className="h-full bg-claude-accent transition-all duration-300"
               style={{ width: `${(completedCount / project.todos.length) * 100}%` }}
             />
           </div>
@@ -74,7 +74,7 @@ export default function TodoList({ project }) {
 
       {/* Todo List */}
       {project.todos.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-claude-text-tertiary">
           <CheckSquare className="w-8 h-8 mx-auto mb-3 opacity-50" />
           <p>No tasks yet</p>
           <p className="text-sm mt-1">Add tasks to track your project progress</p>
@@ -98,7 +98,7 @@ export default function TodoList({ project }) {
           {/* Completed Todos */}
           {completedTodos.length > 0 && (
             <div>
-              <h3 className="text-sm font-medium text-gray-500 mb-2 mt-6">Completed</h3>
+              <h3 className="text-sm font-medium text-claude-text-tertiary mb-2 mt-6">Completed</h3>
               <div className="space-y-2">
                 {completedTodos.map(todo => (
                   <TodoItem
@@ -119,23 +119,23 @@ export default function TodoList({ project }) {
 
 function TodoItem({ todo, onToggle, onDelete }) {
   return (
-    <div className="group flex items-center gap-3 bg-gray-800 border border-gray-700 rounded-lg p-3 hover:border-gray-600 transition-colors">
+    <div className="group flex items-center gap-3 bg-claude-bg-surface border border-claude-border rounded-claude-sm p-3 hover:border-claude-accent/50 transition-colors">
       <button
         onClick={() => onToggle(todo.id)}
         className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
           todo.completed
-            ? 'bg-orange-500 border-orange-500'
-            : 'border-gray-600 hover:border-orange-500'
+            ? 'bg-claude-accent border-claude-accent'
+            : 'border-claude-border hover:border-claude-accent'
         }`}
       >
         {todo.completed && <Check className="w-3 h-3 text-white" />}
       </button>
-      <span className={`flex-1 ${todo.completed ? 'text-gray-500 line-through' : 'text-gray-200'}`}>
+      <span className={`flex-1 ${todo.completed ? 'text-claude-text-tertiary line-through' : 'text-claude-text-primary'}`}>
         {todo.text}
       </span>
       <button
         onClick={() => onDelete(todo.id)}
-        className="p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded opacity-0 group-hover:opacity-100 transition-all"
+        className="p-1.5 text-claude-text-tertiary hover:text-claude-error hover:bg-red-50 rounded-claude-sm opacity-0 group-hover:opacity-100 transition-all"
       >
         <Trash2 className="w-4 h-4" />
       </button>

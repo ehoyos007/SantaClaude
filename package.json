@@ -1,15 +1,48 @@
 {
-  "name": "claude-code-project-manager",
+  "name": "claude-projects",
+  "productName": "Claude Projects",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
   "main": "electron/main.js",
+  "author": "Enzo Hoyos",
+  "description": "Manage your Claude Code projects",
   "scripts": {
     "dev": "vite",
     "electron:dev": "concurrently -k \"vite\" \"sleep 2 && electron .\"",
     "build": "vite build",
-    "electron:build": "vite build && electron-builder",
+    "build:mac": "vite build && electron-builder --mac",
+    "build:win": "vite build && electron-builder --win",
+    "build:linux": "vite build && electron-builder --linux",
     "preview": "vite preview"
+  },
+  "build": {
+    "appId": "com.claude.projects",
+    "productName": "Claude Projects",
+    "directories": {
+      "output": "release"
+    },
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": ["dmg", "zip"],
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false
+    },
+    "win": {
+      "target": ["nsis", "portable"]
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "category": "Development"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "extraResources": [
+      "node_modules/node-pty/**/*"
+    ],
+    "asar": true
   },
   "dependencies": {
     "@xterm/addon-fit": "^0.11.0",
@@ -27,6 +60,7 @@
     "autoprefixer": "^10.4.20",
     "concurrently": "^9.2.1",
     "electron": "^39.2.7",
+    "electron-builder": "^25.1.8",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.16",
     "vite": "^5.4.11"

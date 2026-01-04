@@ -36,21 +36,21 @@ export default function AddProjectModal({ onClose, editProject = null }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-gray-800 rounded-xl border border-gray-700 w-full max-w-md shadow-xl">
+    <div className="fixed inset-0 bg-claude-text-primary/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="bg-claude-bg-surface rounded-claude-lg border border-claude-border w-full max-w-md shadow-claude-lg">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-700">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-claude-border">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-orange-500/20 rounded-lg">
-              <FolderPlus className="w-5 h-5 text-orange-400" />
+            <div className="p-2 bg-claude-accent-light rounded-claude-sm">
+              <FolderPlus className="w-5 h-5 text-claude-accent" />
             </div>
-            <h2 className="text-lg font-semibold text-white">
+            <h2 className="text-lg font-semibold text-claude-text-primary">
               {editProject ? 'Edit Project' : 'Add Project'}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-1.5 text-claude-text-tertiary hover:text-claude-text-primary hover:bg-claude-bg-tertiary rounded-claude-sm transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -59,7 +59,7 @@ export default function AddProjectModal({ onClose, editProject = null }) {
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+            <label className="block text-sm font-medium text-claude-text-primary mb-1.5">
               Project Name *
             </label>
             <input
@@ -67,13 +67,13 @@ export default function AddProjectModal({ onClose, editProject = null }) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="My Awesome Project"
-              className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="w-full px-3 py-2.5 bg-claude-bg-primary border border-claude-border rounded-claude-sm text-claude-text-primary placeholder-claude-text-tertiary focus:outline-none focus:ring-2 focus:ring-claude-accent focus:border-transparent"
               autoFocus
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+            <label className="block text-sm font-medium text-claude-text-primary mb-1.5">
               Project Path
             </label>
             <input
@@ -81,12 +81,12 @@ export default function AddProjectModal({ onClose, editProject = null }) {
               value={path}
               onChange={(e) => setPath(e.target.value)}
               placeholder="/Users/you/projects/my-project"
-              className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent font-mono text-sm"
+              className="w-full px-3 py-2.5 bg-claude-bg-primary border border-claude-border rounded-claude-sm text-claude-text-primary placeholder-claude-text-tertiary focus:outline-none focus:ring-2 focus:ring-claude-accent focus:border-transparent font-mono text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+            <label className="block text-sm font-medium text-claude-text-primary mb-1.5">
               Description
             </label>
             <textarea
@@ -94,12 +94,12 @@ export default function AddProjectModal({ onClose, editProject = null }) {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description of the project..."
               rows={3}
-              className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+              className="w-full px-3 py-2.5 bg-claude-bg-primary border border-claude-border rounded-claude-sm text-claude-text-primary placeholder-claude-text-tertiary focus:outline-none focus:ring-2 focus:ring-claude-accent focus:border-transparent resize-none"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1.5">
+            <label className="block text-sm font-medium text-claude-text-primary mb-1.5">
               Tags
             </label>
             <input
@@ -107,7 +107,7 @@ export default function AddProjectModal({ onClose, editProject = null }) {
               value={tagsInput}
               onChange={(e) => setTagsInput(e.target.value)}
               placeholder="react, typescript, api (comma separated)"
-              className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="w-full px-3 py-2.5 bg-claude-bg-primary border border-claude-border rounded-claude-sm text-claude-text-primary placeholder-claude-text-tertiary focus:outline-none focus:ring-2 focus:ring-claude-accent focus:border-transparent"
             />
           </div>
 
@@ -116,14 +116,14 @@ export default function AddProjectModal({ onClose, editProject = null }) {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
+              className="px-4 py-2.5 text-claude-text-secondary hover:text-claude-text-primary hover:bg-claude-bg-tertiary rounded-claude-sm transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={!name.trim()}
-              className="px-4 py-2 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+              className="px-4 py-2.5 bg-claude-accent hover:bg-claude-accent-hover disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium rounded-claude-sm transition-colors"
             >
               {editProject ? 'Save Changes' : 'Add Project'}
             </button>

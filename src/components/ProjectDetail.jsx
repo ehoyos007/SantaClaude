@@ -24,10 +24,10 @@ export default function ProjectDetail() {
   if (!selectedProject) {
     return (
       <div className="text-center py-16">
-        <p className="text-gray-500">Project not found</p>
+        <p className="text-claude-text-secondary">Project not found</p>
         <button
           onClick={() => dispatch({ type: 'DESELECT_PROJECT' })}
-          className="mt-4 text-orange-400 hover:text-orange-300"
+          className="mt-4 text-claude-accent hover:text-claude-accent-hover"
         >
           Back to projects
         </button>
@@ -43,7 +43,7 @@ export default function ProjectDetail() {
       <div className="mb-6">
         <button
           onClick={() => dispatch({ type: 'DESELECT_PROJECT' })}
-          className="flex items-center gap-2 text-gray-400 hover:text-white mb-4 transition-colors"
+          className="flex items-center gap-2 text-claude-text-secondary hover:text-claude-text-primary mb-4 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to projects
@@ -51,17 +51,17 @@ export default function ProjectDetail() {
 
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-white mb-1">{selectedProject.name}</h2>
+            <h2 className="text-2xl font-semibold text-claude-text-primary mb-1">{selectedProject.name}</h2>
             {selectedProject.path && (
-              <p className="text-sm text-gray-500 font-mono">{selectedProject.path}</p>
+              <p className="text-sm text-claude-text-tertiary font-mono">{selectedProject.path}</p>
             )}
             {selectedProject.description && (
-              <p className="text-gray-400 mt-2">{selectedProject.description}</p>
+              <p className="text-claude-text-secondary mt-2">{selectedProject.description}</p>
             )}
             {selectedProject.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-3">
                 {selectedProject.tags.map(tag => (
-                  <span key={tag} className="px-2 py-1 bg-gray-800 text-gray-300 text-sm rounded-full">
+                  <span key={tag} className="px-2.5 py-1 bg-claude-bg-tertiary text-claude-text-secondary text-sm rounded-full">
                     {tag}
                   </span>
                 ))}
@@ -70,7 +70,7 @@ export default function ProjectDetail() {
           </div>
           <button
             onClick={() => setShowEditModal(true)}
-            className="flex items-center gap-2 px-3 py-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+            className="flex items-center gap-2 px-3 py-2 text-claude-text-secondary hover:text-claude-text-primary hover:bg-claude-bg-tertiary rounded-claude-sm transition-colors"
           >
             <Edit2 className="w-4 h-4" />
             Edit
@@ -78,7 +78,7 @@ export default function ProjectDetail() {
         </div>
 
         {/* Stats */}
-        <div className="flex items-center gap-6 mt-4 text-sm text-gray-500">
+        <div className="flex items-center gap-6 mt-4 text-sm text-claude-text-tertiary">
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4" />
             <span>{selectedProject.sessions.length} sessions</span>
@@ -94,7 +94,7 @@ export default function ProjectDetail() {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-700 mb-6">
+      <div className="border-b border-claude-border mb-6">
         <div className="flex gap-1">
           {tabs.map(tab => {
             const Icon = tab.icon
@@ -104,8 +104,8 @@ export default function ProjectDetail() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
                   activeTab === tab.id
-                    ? 'text-orange-400 border-orange-400'
-                    : 'text-gray-400 border-transparent hover:text-gray-200'
+                    ? 'text-claude-accent border-claude-accent'
+                    : 'text-claude-text-tertiary border-transparent hover:text-claude-text-primary'
                 }`}
               >
                 <Icon className="w-4 h-4" />

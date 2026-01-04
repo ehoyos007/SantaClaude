@@ -35,18 +35,18 @@ export default function NotesEditor({ project }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2 text-sm text-gray-500">
+        <div className="flex items-center gap-2 text-sm text-claude-text-tertiary">
           <FileText className="w-4 h-4" />
           <span>Markdown supported</span>
         </div>
         <div className="flex items-center gap-3">
           {!saved && (
-            <span className="text-xs text-orange-400">Unsaved changes</span>
+            <span className="text-xs text-claude-accent">Unsaved changes</span>
           )}
           <button
             onClick={handleSave}
             disabled={saved}
-            className="flex items-center gap-2 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 disabled:opacity-50 text-gray-300 text-sm rounded-lg transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 bg-claude-bg-surface border border-claude-border hover:bg-claude-bg-tertiary disabled:opacity-50 text-claude-text-primary text-sm rounded-claude-sm transition-colors"
           >
             <Save className="w-4 h-4" />
             Save
@@ -65,10 +65,10 @@ You can write:
 - Architecture decisions
 - Important links
 - Things to remember"
-        className="w-full h-96 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent font-mono text-sm resize-none"
+        className="w-full h-96 px-4 py-3 bg-claude-bg-surface border border-claude-border rounded-claude-md text-claude-text-primary placeholder-claude-text-tertiary focus:outline-none focus:ring-2 focus:ring-claude-accent focus:border-transparent font-mono text-sm resize-none"
       />
 
-      <p className="text-xs text-gray-500 mt-2">
+      <p className="text-xs text-claude-text-tertiary mt-2">
         Notes are saved automatically when you click away
       </p>
     </div>

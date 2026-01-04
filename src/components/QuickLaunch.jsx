@@ -43,14 +43,14 @@ export default function QuickLaunch({ project }) {
 
   return (
     <div>
-      <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+      <div className="flex items-center gap-2 text-sm text-claude-text-tertiary mb-6">
         <Terminal className="w-4 h-4" />
         <span>Quick commands for this project</span>
       </div>
 
       {!project.path && (
-        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mb-6">
-          <p className="text-yellow-400 text-sm">
+        <div className="bg-amber-50 border border-amber-200 rounded-claude-md p-4 mb-6">
+          <p className="text-amber-700 text-sm">
             Add a project path to get customized commands
           </p>
         </div>
@@ -60,23 +60,23 @@ export default function QuickLaunch({ project }) {
         {commands.map(cmd => (
           <div
             key={cmd.id}
-            className="bg-gray-800 border border-gray-700 rounded-lg p-4 hover:border-gray-600 transition-colors"
+            className="bg-claude-bg-surface border border-claude-border rounded-claude-md p-4 hover:border-claude-accent/50 transition-colors"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
-                <h3 className="text-gray-200 font-medium mb-1">{cmd.label}</h3>
-                <p className="text-sm text-gray-500 mb-3">{cmd.description}</p>
-                <code className="block bg-gray-900 px-3 py-2 rounded text-sm text-orange-400 font-mono overflow-x-auto">
+                <h3 className="text-claude-text-primary font-medium mb-1">{cmd.label}</h3>
+                <p className="text-sm text-claude-text-tertiary mb-3">{cmd.description}</p>
+                <code className="block bg-claude-bg-tertiary px-3 py-2 rounded-claude-sm text-sm text-claude-accent font-mono overflow-x-auto">
                   {cmd.command || '(Set project path first)'}
                 </code>
               </div>
               {cmd.command && (
                 <button
                   onClick={() => handleCopy(cmd.id, cmd.command)}
-                  className={`flex-shrink-0 p-2 rounded-lg transition-colors ${
+                  className={`flex-shrink-0 p-2 rounded-claude-sm transition-colors ${
                     copied === cmd.id
-                      ? 'bg-green-500/20 text-green-400'
-                      : 'bg-gray-700 text-gray-400 hover:text-white hover:bg-gray-600'
+                      ? 'bg-green-50 text-claude-success'
+                      : 'bg-claude-bg-tertiary text-claude-text-secondary hover:text-claude-text-primary hover:bg-claude-border'
                   }`}
                 >
                   {copied === cmd.id ? (
@@ -92,11 +92,11 @@ export default function QuickLaunch({ project }) {
       </div>
 
       {/* Tips */}
-      <div className="mt-8 p-4 bg-gray-800/50 rounded-lg border border-gray-700">
-        <h3 className="text-sm font-medium text-gray-300 mb-2">Tips</h3>
-        <ul className="text-sm text-gray-500 space-y-1">
-          <li>Use <code className="text-orange-400">claude --help</code> to see all available options</li>
-          <li>Press <code className="text-orange-400">Ctrl+C</code> to exit Claude Code at any time</li>
+      <div className="mt-8 p-4 bg-claude-bg-tertiary rounded-claude-md border border-claude-border">
+        <h3 className="text-sm font-medium text-claude-text-primary mb-2">Tips</h3>
+        <ul className="text-sm text-claude-text-secondary space-y-1">
+          <li>Use <code className="text-claude-accent">claude --help</code> to see all available options</li>
+          <li>Press <code className="text-claude-accent">Ctrl+C</code> to exit Claude Code at any time</li>
           <li>Your conversation history is saved automatically</li>
         </ul>
       </div>
