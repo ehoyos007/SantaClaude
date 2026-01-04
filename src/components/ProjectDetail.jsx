@@ -1,22 +1,24 @@
 import { useState } from 'react'
-import { ArrowLeft, Edit2, Clock, FileText, CheckSquare, Terminal } from 'lucide-react'
+import { ArrowLeft, Edit2, Clock, FileText, CheckSquare, Terminal as TerminalIcon, SquareTerminal } from 'lucide-react'
 import { useProjects } from '../context/ProjectContext'
 import AddProjectModal from './AddProjectModal'
 import SessionHistory from './SessionHistory'
 import NotesEditor from './NotesEditor'
 import TodoList from './TodoList'
 import QuickLaunch from './QuickLaunch'
+import Terminal from './Terminal'
 
 const tabs = [
+  { id: 'terminal', label: 'Terminal', icon: SquareTerminal },
   { id: 'sessions', label: 'Sessions', icon: Clock },
   { id: 'notes', label: 'Notes', icon: FileText },
   { id: 'todos', label: 'Todos', icon: CheckSquare },
-  { id: 'launch', label: 'Quick Launch', icon: Terminal },
+  { id: 'launch', label: 'Quick Launch', icon: TerminalIcon },
 ]
 
 export default function ProjectDetail() {
   const { dispatch, selectedProject } = useProjects()
-  const [activeTab, setActiveTab] = useState('sessions')
+  const [activeTab, setActiveTab] = useState('terminal')
   const [showEditModal, setShowEditModal] = useState(false)
 
   if (!selectedProject) {
@@ -115,7 +117,8 @@ export default function ProjectDetail() {
       </div>
 
       {/* Tab Content */}
-      <div>
+      <div className={activeTab === 'terminal' ? 'h-[500px]' : ''}>
+        {activeTab === 'terminal' && <Terminal project={selectedProject} />}
         {activeTab === 'sessions' && <SessionHistory project={selectedProject} />}
         {activeTab === 'notes' && <NotesEditor project={selectedProject} />}
         {activeTab === 'todos' && <TodoList project={selectedProject} />}
