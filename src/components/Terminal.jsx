@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Terminal as XTerm } from 'xterm'
 import { FitAddon } from '@xterm/addon-fit'
-import { Play, Square, RotateCcw, Terminal as TerminalIcon } from 'lucide-react'
+import { Play, Square, RotateCcw, Terminal as TerminalIcon, AlertCircle } from 'lucide-react'
 import 'xterm/css/xterm.css'
 
 export default function Terminal({ project, autoStart = false, command = null }) {
@@ -11,6 +11,7 @@ export default function Terminal({ project, autoStart = false, command = null })
   const terminalIdRef = useRef(null)
   const [isRunning, setIsRunning] = useState(false)
   const [isElectron, setIsElectron] = useState(false)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     setIsElectron(window.electronAPI?.isElectron === true)
@@ -94,9 +95,22 @@ export default function Terminal({ project, autoStart = false, command = null })
     })
 
     // Listen for terminal exit
-    const removeExitListener = window.electronAPI.onTerminalExit((id) => {
+    const removeExitListener = window.electronAPI.onTerminalExit((id, exitCode) => {
       if (id === terminalIdRef.current) {
-        xterm.writeln('\r\n\x1b[90m[Process exited]\x1b[0m')
+        const exitMessage = exitCode !== undefined
+          ? `\r\n\x1b[90m[Process exited with code ${exitCode}]\x1b[0m`
+          : '\r\n\x1b[90m[Process exited]\x1b[0m'
+        xterm.writeln(exitMessage)
+        setIsRunning(false)
+        terminalIdRef.current = null
+      }
+    })
+
+    // Listen for terminal errors
+    const removeErrorListener = window.electronAPI.onTerminalError((id, errorMsg) => {
+      if (id === terminalIdRef.current || !terminalIdRef.current) {
+        xterm.writeln(`\r\n\x1b[31m[Error: ${errorMsg}]\x1b[0m`)
+        setError(errorMsg)
         setIsRunning(false)
         terminalIdRef.current = null
       }
@@ -112,6 +126,7 @@ export default function Terminal({ project, autoStart = false, command = null })
       window.removeEventListener('resize', handleResize)
       removeDataListener()
       removeExitListener()
+      removeErrorListener()
       if (terminalIdRef.current) {
         window.electronAPI.killTerminal(terminalIdRef.current)
       }
@@ -122,20 +137,33 @@ export default function Terminal({ project, autoStart = false, command = null })
   const startTerminal = async (cmd = null) => {
     if (!isElectron || isRunning) return
 
+    setError(null) // Clear any previous errors
     const cwd = project?.path || undefined
-    const terminalId = await window.electronAPI.createTerminal(cwd, cmd)
-    terminalIdRef.current = terminalId
-    setIsRunning(true)
 
-    // Focus and resize
-    xtermRef.current?.focus()
-    if (fitAddonRef.current && xtermRef.current) {
-      fitAddonRef.current.fit()
-      window.electronAPI.resizeTerminal(
-        terminalId,
-        xtermRef.current.cols,
-        xtermRef.current.rows
-      )
+    try {
+      const result = await window.electronAPI.createTerminal(cwd, cmd)
+
+      if (result.success) {
+        terminalIdRef.current = result.terminalId
+        setIsRunning(true)
+
+        // Focus and resize
+        xtermRef.current?.focus()
+        if (fitAddonRef.current && xtermRef.current) {
+          fitAddonRef.current.fit()
+          window.electronAPI.resizeTerminal(
+            result.terminalId,
+            xtermRef.current.cols,
+            xtermRef.current.rows
+          )
+        }
+      } else {
+        setError(result.error || 'Failed to create terminal')
+        xtermRef.current?.writeln(`\r\n\x1b[31m[Error: ${result.error}]\x1b[0m`)
+      }
+    } catch (err) {
+      setError(err.message || 'Failed to create terminal')
+      xtermRef.current?.writeln(`\r\n\x1b[31m[Error: ${err.message}]\x1b[0m`)
     }
   }
 
@@ -149,6 +177,7 @@ export default function Terminal({ project, autoStart = false, command = null })
 
   const restartTerminal = () => {
     stopTerminal()
+    setError(null)
     xtermRef.current?.clear()
     setTimeout(() => startTerminal(), 100)
   }
@@ -220,8 +249,14 @@ export default function Terminal({ project, autoStart = false, command = null })
 
       {/* Status */}
       <div className="flex items-center gap-2 mt-2 text-xs text-claude-text-tertiary">
-        <div className={`w-2 h-2 rounded-full ${isRunning ? 'bg-claude-success' : 'bg-claude-border'}`} />
-        <span>{isRunning ? 'Running' : 'Stopped'}</span>
+        <div className={`w-2 h-2 rounded-full ${isRunning ? 'bg-claude-success' : error ? 'bg-claude-error' : 'bg-claude-border'}`} />
+        <span>{isRunning ? 'Running' : error ? 'Error' : 'Stopped'}</span>
+        {error && (
+          <span className="flex items-center gap-1 text-claude-error">
+            <AlertCircle className="w-3 h-3" />
+            {error}
+          </span>
+        )}
         {project?.path && (
           <span className="ml-auto font-mono truncate max-w-xs">{project.path}</span>
         )}

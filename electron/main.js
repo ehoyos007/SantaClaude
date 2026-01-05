@@ -155,16 +155,34 @@ app.on('before-quit', () => {
 
 // IPC Handlers for terminal
 ipcMain.handle('terminal:create', async (event, { cwd, command }) => {
-  const terminalId = createTerminal(cwd, command, (data) => {
-    if (mainWindow && !mainWindow.isDestroyed()) {
-      mainWindow.webContents.send('terminal:data', { terminalId, data })
+  let terminalId = null
+
+  const result = createTerminal(
+    cwd,
+    command,
+    (data) => {
+      if (mainWindow && !mainWindow.isDestroyed() && terminalId) {
+        mainWindow.webContents.send('terminal:data', { terminalId, data })
+      }
+    },
+    (exitCode) => {
+      if (mainWindow && !mainWindow.isDestroyed() && terminalId) {
+        mainWindow.webContents.send('terminal:exit', { terminalId, exitCode })
+      }
+    },
+    (errorMessage) => {
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send('terminal:error', { terminalId, error: errorMessage })
+      }
     }
-  }, () => {
-    if (mainWindow && !mainWindow.isDestroyed()) {
-      mainWindow.webContents.send('terminal:exit', { terminalId })
-    }
-  })
-  return terminalId
+  )
+
+  if (result.success) {
+    terminalId = result.terminalId
+    return { success: true, terminalId }
+  } else {
+    return { success: false, error: result.error }
+  }
 })
 
 ipcMain.handle('terminal:write', async (event, { terminalId, data }) => {

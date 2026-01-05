@@ -118,7 +118,7 @@ export default function ProjectDetail() {
 
       {/* Tab Content */}
       <div className={activeTab === 'terminal' ? 'h-[500px]' : ''}>
-        {activeTab === 'terminal' && <Terminal project={selectedProject} />}
+        {activeTab === 'terminal' && <Terminal key={selectedProject.id} project={selectedProject} />}
         {activeTab === 'sessions' && <SessionHistory project={selectedProject} />}
         {activeTab === 'notes' && <NotesEditor project={selectedProject} />}
         {activeTab === 'todos' && <TodoList project={selectedProject} />}
