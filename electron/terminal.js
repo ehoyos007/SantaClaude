@@ -19,42 +19,53 @@ if (app.isPackaged) {
 const terminals = new Map()
 let terminalIdCounter = 0
 
-const shell = process.platform === 'win32' ? 'powershell.exe' : process.env.SHELL || '/bin/zsh'
+const shell = process.platform === 'win32' ? 'powershell.exe' : process.env.SHELL || '/bin/bash'
 
-export function createTerminal(cwd, command, onData, onExit) {
+export function createTerminal(cwd, command, onData, onExit, onError) {
   const terminalId = `terminal-${++terminalIdCounter}`
 
-  const ptyProcess = pty.spawn(shell, [], {
-    name: 'xterm-256color',
-    cols: 80,
-    rows: 24,
-    cwd: cwd || os.homedir(),
-    env: {
-      ...process.env,
-      TERM: 'xterm-256color',
-      COLORTERM: 'truecolor'
+  try {
+    // Validate cwd exists, fallback to home directory
+    const workingDir = cwd || os.homedir()
+
+    const ptyProcess = pty.spawn(shell, [], {
+      name: 'xterm-256color',
+      cols: 80,
+      rows: 24,
+      cwd: workingDir,
+      env: {
+        ...process.env,
+        TERM: 'xterm-256color',
+        COLORTERM: 'truecolor'
+      }
+    })
+
+    ptyProcess.onData((data) => {
+      onData(data)
+    })
+
+    ptyProcess.onExit(({ exitCode }) => {
+      terminals.delete(terminalId)
+      onExit(exitCode)
+    })
+
+    terminals.set(terminalId, ptyProcess)
+
+    // If a command was provided, execute it after a short delay
+    if (command) {
+      setTimeout(() => {
+        ptyProcess.write(command + '\r')
+      }, 100)
     }
-  })
 
-  ptyProcess.onData((data) => {
-    onData(data)
-  })
-
-  ptyProcess.onExit(() => {
-    terminals.delete(terminalId)
-    onExit()
-  })
-
-  terminals.set(terminalId, ptyProcess)
-
-  // If a command was provided, execute it after a short delay
-  if (command) {
-    setTimeout(() => {
-      ptyProcess.write(command + '\r')
-    }, 100)
+    return { success: true, terminalId }
+  } catch (error) {
+    console.error('Failed to create terminal:', error)
+    if (onError) {
+      onError(error.message)
+    }
+    return { success: false, error: error.message }
   }
-
-  return terminalId
 }
 
 export function writeToTerminal(terminalId, data) {

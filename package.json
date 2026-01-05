@@ -5,7 +5,11 @@
   "version": "1.0.0",
   "type": "module",
   "main": "electron/main.js",
-  "author": "Enzo Hoyos",
+  "author": {
+    "name": "Enzo Hoyos",
+    "email": "enzo@example.com"
+  },
+  "homepage": "https://github.com/ehoyos007/SantaClaude",
   "description": "Manage your Claude Code projects",
   "scripts": {
     "dev": "vite",

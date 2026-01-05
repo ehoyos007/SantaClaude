@@ -14,9 +14,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return () => ipcRenderer.removeListener('terminal:data', handler)
   },
   onTerminalExit: (callback) => {
-    const handler = (event, { terminalId }) => callback(terminalId)
+    const handler = (event, { terminalId, exitCode }) => callback(terminalId, exitCode)
     ipcRenderer.on('terminal:exit', handler)
     return () => ipcRenderer.removeListener('terminal:exit', handler)
+  },
+  onTerminalError: (callback) => {
+    const handler = (event, { terminalId, error }) => callback(terminalId, error)
+    ipcRenderer.on('terminal:error', handler)
+    return () => ipcRenderer.removeListener('terminal:error', handler)
   },
 
   // Storage operations (electron-store)
