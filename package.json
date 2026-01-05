@@ -46,12 +46,14 @@
     },
     "files": [
       "dist/**/*",
-      "electron/**/*"
-    ],
-    "extraResources": [
+      "electron/**/*",
       "node_modules/node-pty/**/*"
     ],
-    "asar": true
+    "asarUnpack": [
+      "node_modules/node-pty/**/*"
+    ],
+    "asar": true,
+    "npmRebuild": true
   },
   "dependencies": {
     "@xterm/addon-fit": "^0.11.0",

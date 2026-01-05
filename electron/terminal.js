@@ -1,5 +1,20 @@
-import pty from 'node-pty'
 import os from 'os'
+import { app } from 'electron'
+import path from 'path'
+import { createRequire } from 'module'
+
+// Handle node-pty loading for both dev and production
+let pty
+const require = createRequire(import.meta.url)
+
+if (app.isPackaged) {
+  // In production, load from unpacked asar location
+  const ptyPath = path.join(process.resourcesPath, 'app.asar.unpacked', 'node_modules', 'node-pty')
+  pty = require(ptyPath)
+} else {
+  // In development, use normal import
+  pty = require('node-pty')
+}
 
 const terminals = new Map()
 let terminalIdCounter = 0
