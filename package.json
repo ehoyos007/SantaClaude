@@ -12,6 +12,7 @@
   "homepage": "https://github.com/ehoyos007/SantaClaude",
   "description": "Manage your Claude Code projects",
   "scripts": {
+    "postinstall": "electron-rebuild -f -w node-pty",
     "dev": "vite",
     "electron:dev": "concurrently -k \"vite\" \"sleep 2 && electron .\"",
     "build": "vite build",
